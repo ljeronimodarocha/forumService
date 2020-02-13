@@ -1,18 +1,23 @@
-package forumService.forumService.models;
+package forumService.forumService.Models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.springframework.lang.NonNull;
+
 @Entity
-public class user {
+public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NonNull
 	private String name;
+	@NonNull
 	private String email;
+	@NonNull
 	private String password;
 	private String state;
 
