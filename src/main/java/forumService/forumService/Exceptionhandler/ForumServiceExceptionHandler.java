@@ -13,7 +13,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 public class ForumServiceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -36,11 +38,22 @@ public class ForumServiceExceptionHandler extends ResponseEntityExceptionHandler
 		return super.handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
 
+	@ExceptionHandler({ MethodArgumentTypeMismatchException.class })
+	public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+			WebRequest request, HttpHeaders headers) {
+		String mensagemUsuário = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.getMessage().toString();
+		return super.handleExceptionInternal(ex, new Erro(mensagemUsuário, mensagemDesenvolvedor), headers,
+				HttpStatus.BAD_REQUEST, request);
+	}
+
 	private List<Erro> criaListaDeErros(BindingResult bindingResult) {
 		List<Erro> erros = new ArrayList<>();
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			String mensagemUsuário = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
 			String mensagemDesenvolvedor = fieldError.toString();
+			System.out.println("smg " + mensagemUsuário);
+			System.out.println(mensagemDesenvolvedor);
 			erros.add(new Erro(mensagemUsuário, mensagemDesenvolvedor));
 		}
 		return erros;

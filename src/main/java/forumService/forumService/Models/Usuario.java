@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import org.springframework.lang.NonNull;
 
 @Entity
-public class User {
+public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
