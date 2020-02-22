@@ -1,6 +1,7 @@
 package forumService.forumService.Models;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +20,9 @@ public class Usuario {
 	private String email;
 	@NonNull
 	private String password;
-	private String state;
+
+	@Enumerated
+	private Estados estado;
 
 	public Long getId() {
 		return id;
@@ -53,12 +56,12 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public String getState() {
-		return state;
+	public Estados getEstados() {
+		return estado;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setEstados(Estados estado) {
+		this.estado = estado;
 	}
 
 }

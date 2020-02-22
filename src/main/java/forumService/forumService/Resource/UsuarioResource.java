@@ -9,26 +9,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import forumService.forumService.Event.RecursoCriadoEvent;
+import forumService.forumService.Service.UsuarioService;
 import forumService.forumService.Models.Usuario;
-import forumService.forumService.Repository.userRepository;
-
+import forumService.forumService.Repository.UsuarioRepository;
 
 @RestController
 @RequestMapping("/usuarios")
-public class UserResource {
+public class UsuarioResource {
 	@Autowired
-	userRepository repo;
+	UsuarioRepository repo;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
+
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@PostMapping
 	public ResponseEntity<Usuario> criar(@Valid @RequestBody Usuario u, HttpServletResponse response) {
@@ -39,7 +45,6 @@ public class UserResource {
 
 	@GetMapping
 	public List<Usuario> get() {
-		
 		return repo.findAll();
 	}
 
@@ -48,6 +53,19 @@ public class UserResource {
 		System.out.println(codigo);
 		Usuario user = repo.findById(codigo).orElse(null);
 		return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+	}
+
+	@PutMapping("/{codigo}")
+	public ResponseEntity<Usuario> atualizar(@PathVariable final Long codigo,
+			@Valid @RequestBody final Usuario usuario) {
+		Usuario pessoaSalva = usuarioService.Atualizar(codigo, usuario);
+		return ResponseEntity.ok(pessoaSalva);
+	}
+
+	@DeleteMapping("/{codigo}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deletar(@PathVariable Long codigo) {
+		repo.deleteById(codigo);
 	}
 
 }
