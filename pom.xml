@@ -52,11 +52,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>scope</scope>
 		</dependency>
-		<!--Migrações FlyWay -->
+		<!--Migrações FlyWay 
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 
 	<build>

@@ -1,21 +1,28 @@
 package forumService.forumService.Models;
 
-public enum Estados {
+public enum Estado {
 
-    RO("Rondônia"), AC("Acre"), AM("Amazonas"), RR("Roraima"), PA("Pará"), AP("Amapá"), TO("Tocantins"), MA("Maranhão"),
+    /*RO("Rondônia"), AC("Acre"), AM("Amazonas"), RR("Roraima"), PA("Pará"), AP("Amapá"), TO("Tocantins"), MA("Maranhão"),
     PI("Piauí"), CE("Ceará"), RN("Rio Grande do Norte"), PB("Paraíba"), PE("Pernambuco"), AL("Alagoas"), SE("Sergipe"),
     BA("Bahia"), MG("Minas Gerais"), ES("Espírito Santo"), RJ("Rio de Janeiro"), SP("São Paulo"), PR("Paraná"),
     SC("Santa Catarina"), RS("Rio Grande do Sul"), MS("Mato Grosso do Sul"), MT("Mato Grosso"), GO("Goiás"),
-    DF("Distrito Federal");
+    DF("Distrito Federal");*/
 
-    private final String nome;
+   /* private final String nome;
 
-    private Estados(String nome) {
+    private Estado(String nome) {
         this.nome = nome;
     }
 
     public String getNome() {
         return nome;
-    }
+    }*/
+    RO, AC, AM, RR, PA, AP, TO, MA,
+    PI, CE, RN, PB, PE, AL, SE,
+    BA, MG, ES, RJ, SP, PR,
+    SC, RS, MS, MT, GO,
+    DF;
+
+    
 
 }

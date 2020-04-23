@@ -1,5 +1,7 @@
 package forumService.forumService.Resource;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +22,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import forumService.forumService.Event.RecursoCriadoEvent;
+import forumService.forumService.Models.Comentario;
 import forumService.forumService.Models.Post;
-import forumService.forumService.Repository.PostREpository;
+import forumService.forumService.Repository.PostRepository;
 import forumService.forumService.Service.PostService;
 
 /**
@@ -32,7 +35,7 @@ import forumService.forumService.Service.PostService;
 public class PostResource {
 
     @Autowired
-    private PostREpository postRepository;
+    private PostRepository postRepository;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -42,13 +45,13 @@ public class PostResource {
 
     @GetMapping
     public List<Post> getMethodName() {
-        return postRepository.findAll();
+       return postRepository.findAll();
     }
 
     @PostMapping
     public ResponseEntity<Post> criar(@Valid @RequestBody Post post, HttpServletResponse response) {
-        Post postSalvo = postRepository.save(post);
-        publisher.publishEvent(new RecursoCriadoEvent(this, response, postSalvo.getId()));
+        Post postSalvo = postService.adicionar(post);
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, postSalvo.getCodigo()));
         return ResponseEntity.status(HttpStatus.CREATED).body(postSalvo);
     }
 
@@ -61,7 +64,7 @@ public class PostResource {
 
     @PutMapping("/{codigo}")
     public ResponseEntity<Post> atualizar(@PathVariable final Long codigo, @Valid @RequestBody final Post post) {
-        Post postSalva = postService.Atualizar(codigo, post);
+        Post postSalva = postService.atualizar(codigo, post);
         return ResponseEntity.ok(postSalva);
     }
 
@@ -71,4 +74,13 @@ public class PostResource {
         postRepository.deleteById(codigo);
     }
 
+    @PostMapping("/{codigo}/comentarios")
+    public ResponseEntity<Comentario> criarComentario(@PathVariable Long codigo,
+            @Valid @RequestBody Comentario comentario, HttpServletResponse response) {
+        Comentario comentarioSalvo = postService.adicionaComentario(codigo, comentario);
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, comentarioSalvo.getCodigo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(comentarioSalvo);
+    }
+
+  
 }

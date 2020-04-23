@@ -3,13 +3,9 @@ package forumService.forumService.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import forumService.forumService.Models.Post;
+import forumService.forumService.Models.Comentario;
 
-/**
- * PostREpository
- */
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long>{
+public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
 
-    
 }

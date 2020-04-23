@@ -1,5 +1,5 @@
 create table usuario(
-	id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+	codigo BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(50),
