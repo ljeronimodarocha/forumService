@@ -1,11 +1,16 @@
 package forumService.forumService.Exceptionhandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,57 +18,77 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@ControllerAdvice
 public class ForumServiceExceptionHandler extends ResponseEntityExceptionHandler {
+
 	@Autowired
 	private MessageSource messageSource;
 
+	@ExceptionHandler({ DataIntegrityViolationException.class })
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+			WebRequest request) {
+		final String mensagemUsuário = messageSource.getMessage("recurso.operacao-nao-permitida", null,
+				LocaleContextHolder.getLocale());
+		final String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuário, mensagemDesenvolvedor));
+		return super.handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
 	@Override
-	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		String mensagemUsuário = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String mensagemDesenvolvedor = ex.getMessage().toString();
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex,
+			final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+		final String mensagemUsuário = messageSource.getMessage("mensagem.invalida", null,
+				LocaleContextHolder.getLocale());
+		final String mensagemDesenvolvedor = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 		return super.handleExceptionInternal(ex, new Erro(mensagemUsuário, mensagemDesenvolvedor), headers,
 				HttpStatus.BAD_REQUEST, request);
 	}
 
 	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		List<Erro> erros = criaListaDeErros(ex.getBindingResult());
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,
+			final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+		final List<Erro> erros = criaListaDeErros(ex.getBindingResult());
 		return super.handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
 
-	@ExceptionHandler({ MethodArgumentTypeMismatchException.class })
-	public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
-			WebRequest request, HttpHeaders headers) {
-		String mensagemUsuário = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String mensagemDesenvolvedor = ex.getMessage().toString();
-		return super.handleExceptionInternal(ex, new Erro(mensagemUsuário, mensagemDesenvolvedor), headers,
-				HttpStatus.BAD_REQUEST, request);
+	@ExceptionHandler({ IllegalArgumentException.class })
+	public ResponseEntity<Object> handleIllegalArgumentException(EntityNotFoundException ex, WebRequest request) {
+		final String mensagemUsuário = messageSource.getMessage("recurso.não-encontrado", null,
+				LocaleContextHolder.getLocale());
+		final String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuário, mensagemDesenvolvedor));
+		return super.handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
-	private List<Erro> criaListaDeErros(BindingResult bindingResult) {
-		List<Erro> erros = new ArrayList<>();
-		for (FieldError fieldError : bindingResult.getFieldErrors()) {
-			String mensagemUsuário = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-			String mensagemDesenvolvedor = fieldError.toString();
-			System.out.println("smg " + mensagemUsuário);
-			System.out.println(mensagemDesenvolvedor);
+	@ExceptionHandler({ EntityNotFoundException.class })
+	public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
+		final String mensagemUsuário = messageSource.getMessage("recurso.não-encontrado", null,
+				LocaleContextHolder.getLocale());
+		final String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuário, mensagemDesenvolvedor));
+		return super.handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+
+	private List<Erro> criaListaDeErros(final BindingResult bindingResult) {
+		final List<Erro> erros = new ArrayList<>();
+		for (final FieldError fieldError : bindingResult.getFieldErrors()) {
+			final String mensagemUsuário = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+			final String mensagemDesenvolvedor = fieldError.toString();
 			erros.add(new Erro(mensagemUsuário, mensagemDesenvolvedor));
 		}
 		return erros;
 	}
 
 	public static class Erro {
-		private String mensagemUsuário;
-		private String mensagemDesenvolvedor;
+		private final String mensagemUsuário;
+		private final String mensagemDesenvolvedor;
 
-		public Erro(String mensagemUsuário, String mensagemDesenvolvedor) {
+		public Erro(final String mensagemUsuário, final String mensagemDesenvolvedor) {
 			this.mensagemUsuário = mensagemUsuário;
 			this.mensagemDesenvolvedor = mensagemDesenvolvedor;
 		}
@@ -76,4 +101,5 @@ public class ForumServiceExceptionHandler extends ResponseEntityExceptionHandler
 			return mensagemDesenvolvedor;
 		}
 	}
+
 }

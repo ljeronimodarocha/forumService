@@ -2,7 +2,6 @@ package forumService.forumService.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import javax.validation.Valid;
@@ -41,17 +40,25 @@ public class PostService {
     }
 
     public Comentario adicionaComentario(Long codigo, @Valid Comentario comentario) {
+        Date date = getLocalDateTimetoDate();
         Post postSalvo = buscarPostPeloCodigo(codigo);
         comentario.setPost(postSalvo);
+        comentario.setDataComentario(date);
+        comentario.setResolucao(false);
         return comentarioRepository.save(comentario);
     }
 
     public Post adicionar(Post post) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        Date date = getLocalDateTimetoDate();
         post.setDateCriacao(date);
         post.setStatusAberto(true);
         return postRepository.save(post);
+    }
+
+    private Date getLocalDateTimetoDate() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        return date;
     }
 
 }

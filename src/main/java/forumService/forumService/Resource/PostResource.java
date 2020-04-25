@@ -1,7 +1,5 @@
 package forumService.forumService.Resource;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -44,8 +42,8 @@ public class PostResource {
     private PostService postService;
 
     @GetMapping
-    public List<Post> getMethodName() {
-       return postRepository.findAll();
+    public List<Post> getAll() {
+        return postRepository.findAll();
     }
 
     @PostMapping
@@ -82,5 +80,4 @@ public class PostResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(comentarioSalvo);
     }
 
-  
 }

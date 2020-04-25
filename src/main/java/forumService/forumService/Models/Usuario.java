@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Usuario {
 
@@ -21,6 +23,7 @@ public class Usuario {
 	@Email
 	private String email;
 	@NotBlank
+	@JsonIgnore
 	private String password;
 
 	@Enumerated(EnumType.STRING)

@@ -1,13 +1,13 @@
 package forumService.forumService.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import forumService.forumService.Models.Estado;
 import forumService.forumService.Models.Usuario;
 import forumService.forumService.Repository.UsuarioRepository;
 
@@ -18,18 +18,25 @@ public class UsuarioService {
 	private UsuarioRepository usuarioRepository;
 
 	public Usuario Atualizar(Long codigo, @Valid Usuario usuario) {
-		Usuario usuarioNovo = buscarPostPeloCodigo(codigo);
+		Usuario usuarioNovo = buscarUsuarioPeloCodigo(codigo);
 		BeanUtils.copyProperties(usuario, usuarioNovo, "codigo");
 		System.out.println(usuarioNovo.getEstado());
 		return usuarioRepository.save(usuarioNovo);
 	}
 
-	private Usuario buscarPostPeloCodigo(Long codigo) {
-		Usuario usuarioSalvo = usuarioRepository.findById(codigo).get();
+	private Usuario buscarUsuarioPeloCodigo(Long codigo) {
+		Usuario usuarioSalvo = usuarioRepository.findById(codigo).orElse(null);
 		if (usuarioSalvo == null) {
-			throw new EmptyResultDataAccessException(1);
+			throw new EntityNotFoundException();
 		}
 		return usuarioSalvo;
+	}
+
+	public Usuario save(@Valid Usuario u) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String passwordEndocer = encoder.encode(u.getPassword());
+		u.setPassword(passwordEndocer);
+		return usuarioRepository.save(u);
 	}
 
 }

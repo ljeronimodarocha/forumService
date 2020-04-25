@@ -34,6 +34,8 @@ public class Comentario {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataComentario;
 
+    private boolean resolucao;
+
     public Long getCodigo() {
         return codigo;
     }
@@ -72,6 +74,14 @@ public class Comentario {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public boolean isResolucao() {
+        return resolucao;
+    }
+
+    public void setResolucao(boolean resolucao) {
+        this.resolucao = resolucao;
     }
 
 }

@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +38,7 @@ public class UsuarioResource {
 
 	@PostMapping
 	public ResponseEntity<Usuario> criar(@Valid @RequestBody Usuario u, HttpServletResponse response) {
-		Usuario userSave = repo.save(u);
+		Usuario userSave = usuarioService.save(u);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, userSave.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(userSave);
 	}
