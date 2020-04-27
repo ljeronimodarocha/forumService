@@ -1,9 +1,11 @@
 package forumService.forumService.Models;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +17,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 /**
  * Post
@@ -33,9 +37,12 @@ public class Post {
     private Usuario dono;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCriacao;
+    @JsonProperty(access = Access.READ_ONLY)
+    private OffsetDateTime dateCriacao;
 
-    private boolean statusAberto;
+    @Enumerated(EnumType.STRING)
+    @JsonProperty(access = Access.READ_ONLY)
+    private Status status;
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "post")
     private List<Comentario> comentarios;
@@ -64,20 +71,12 @@ public class Post {
         this.codigo = codigo;
     }
 
-    public void setStatusAberto(boolean statusAberto) {
-        this.statusAberto = statusAberto;
-    }
-
-    public Date getDateCriacao() {
+    public OffsetDateTime getDateCriacao() {
         return dateCriacao;
     }
 
-    public void setDateCriacao(Date dateCriacao) {
+    public void setDateCriacao(OffsetDateTime dateCriacao) {
         this.dateCriacao = dateCriacao;
-    }
-
-    public boolean getStatusAberto() {
-        return statusAberto;
     }
 
     public List<Comentario> getComentarios() {
@@ -86,6 +85,14 @@ public class Post {
 
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
 }

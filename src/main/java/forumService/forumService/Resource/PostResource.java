@@ -46,6 +46,18 @@ public class PostResource {
         return postRepository.findAll();
     }
 
+    @GetMapping("/{codigo}")
+    public ResponseEntity<Post> buscaPeloCodigo(@PathVariable Long codigo) {
+        Post post = postRepository.findById(codigo).orElse(null);
+        return post != null ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{codigo}/fecha")
+    public ResponseEntity<Post> fechaPost(@PathVariable Long codigo) {
+        Post postSalvo = postService.fechaPost(codigo);
+        return ResponseEntity.ok(postSalvo);
+    }
+
     @PostMapping
     public ResponseEntity<Post> criar(@Valid @RequestBody Post post, HttpServletResponse response) {
         Post postSalvo = postService.adicionar(post);
@@ -53,11 +65,12 @@ public class PostResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(postSalvo);
     }
 
-    @GetMapping("/{codigo}")
-    public ResponseEntity<Post> buscaPeloCodigo(@PathVariable Long codigo) {
-        System.out.println(codigo);
-        Post post = postRepository.findById(codigo).orElse(null);
-        return post != null ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
+    @PostMapping("/{codigo}/comentarios")
+    public ResponseEntity<Comentario> criarComentario(@PathVariable Long codigo,
+            @Valid @RequestBody Comentario comentario, HttpServletResponse response) {
+        Comentario comentarioSalvo = postService.adicionaComentario(codigo, comentario);
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, comentarioSalvo.getCodigo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(comentarioSalvo);
     }
 
     @PutMapping("/{codigo}")
@@ -70,14 +83,6 @@ public class PostResource {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long codigo) {
         postRepository.deleteById(codigo);
-    }
-
-    @PostMapping("/{codigo}/comentarios")
-    public ResponseEntity<Comentario> criarComentario(@PathVariable Long codigo,
-            @Valid @RequestBody Comentario comentario, HttpServletResponse response) {
-        Comentario comentarioSalvo = postService.adicionaComentario(codigo, comentario);
-        publisher.publishEvent(new RecursoCriadoEvent(this, response, comentarioSalvo.getCodigo()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(comentarioSalvo);
     }
 
 }

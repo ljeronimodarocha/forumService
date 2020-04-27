@@ -1,8 +1,6 @@
 package forumService.forumService.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import javax.validation.Valid;
 
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import forumService.forumService.Models.Comentario;
 import forumService.forumService.Models.Post;
+import forumService.forumService.Models.Status;
 import forumService.forumService.Repository.ComentarioRepository;
 import forumService.forumService.Repository.PostRepository;
 
@@ -40,25 +39,30 @@ public class PostService {
     }
 
     public Comentario adicionaComentario(Long codigo, @Valid Comentario comentario) {
-        Date date = getLocalDateTimetoDate();
         Post postSalvo = buscarPostPeloCodigo(codigo);
         comentario.setPost(postSalvo);
-        comentario.setDataComentario(date);
+        comentario.setDataComentario(OffsetDateTime.now());
         comentario.setResolucao(false);
         return comentarioRepository.save(comentario);
     }
 
     public Post adicionar(Post post) {
-        Date date = getLocalDateTimetoDate();
-        post.setDateCriacao(date);
-        post.setStatusAberto(true);
+        post.setDateCriacao(OffsetDateTime.now());
+        post.setStatus(Status.ABERTO);
         return postRepository.save(post);
     }
 
-    private Date getLocalDateTimetoDate() {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        return date;
+    /*
+     * private Date getLocalDateTimetoDate() { LocalDateTime localDateTime =
+     * LocalDateTime.now(); Date date =
+     * Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()); return
+     * date; }
+     */
+
+    public Post fechaPost(Long codigo) {
+        Post post = buscarPostPeloCodigo(codigo);
+        post.setStatus(Status.FECHADO);
+        return postRepository.save(post);
     }
 
 }

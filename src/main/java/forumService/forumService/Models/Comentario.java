@@ -1,6 +1,6 @@
 package forumService.forumService.Models;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +15,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Comentario {
@@ -22,18 +24,24 @@ public class Comentario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
+
     @NotNull
     @ManyToOne
     private Usuario usuario;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "codigo")
     private Post post;
+
     @NotBlank
     private String comentario;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataComentario;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = Access.READ_ONLY)
+    private OffsetDateTime dataComentario;
+
+    @JsonProperty(access = Access.READ_ONLY)
     private boolean resolucao;
 
     public Long getCodigo() {
@@ -60,11 +68,11 @@ public class Comentario {
         this.comentario = comentario;
     }
 
-    public Date getDataComentario() {
+    public OffsetDateTime getDataComentario() {
         return dataComentario;
     }
 
-    public void setDataComentario(Date dataComentario) {
+    public void setDataComentario(OffsetDateTime dataComentario) {
         this.dataComentario = dataComentario;
     }
 
