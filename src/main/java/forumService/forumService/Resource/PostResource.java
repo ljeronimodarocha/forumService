@@ -2,6 +2,7 @@ package forumService.forumService.Resource;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -48,7 +49,7 @@ public class PostResource {
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Post> buscaPeloCodigo(@PathVariable Long codigo) {
-        Post post = postRepository.findById(codigo).orElse(null);
+        Post post = postRepository.findById(codigo).orElseThrow(() -> new EntityNotFoundException("Post não encontrado"));
         return post != null ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
     }
 
