@@ -1,5 +1,6 @@
 package forumService.forumService.Models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,6 +11,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 public class Usuario {
@@ -23,10 +27,11 @@ public class Usuario {
 
 	@NotBlank
 	@Email
+	@Column(unique = true)
 	private String email;
-	
+
 	@NotBlank
-	//@JsonIgnore
+	// @JsonIgnore
 	private String password;
 
 	@Enumerated(EnumType.STRING)
@@ -48,10 +53,12 @@ public class Usuario {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
 
+	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
 	}
