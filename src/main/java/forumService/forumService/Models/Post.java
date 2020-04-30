@@ -12,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,7 +34,6 @@ public class Post {
     @OneToOne(fetch = FetchType.EAGER)
     private Usuario dono;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dateCriacao;
 

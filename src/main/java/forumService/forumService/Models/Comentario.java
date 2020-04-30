@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +35,6 @@ public class Comentario {
     @NotBlank
     private String comentario;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataComentario;
 
@@ -68,13 +65,7 @@ public class Comentario {
         this.comentario = comentario;
     }
 
-    public OffsetDateTime getDataComentario() {
-        return dataComentario;
-    }
-
-    public void setDataComentario(OffsetDateTime dataComentario) {
-        this.dataComentario = dataComentario;
-    }
+   
 
     public Post getPost() {
         return post;
@@ -90,6 +81,14 @@ public class Comentario {
 
     public void setResolucao(boolean resolucao) {
         this.resolucao = resolucao;
+    }
+
+    public OffsetDateTime getDataComentario() {
+        return dataComentario;
+    }
+
+    public void setDataComentario(OffsetDateTime dataComentario) {
+        this.dataComentario = dataComentario;
     }
 
 }

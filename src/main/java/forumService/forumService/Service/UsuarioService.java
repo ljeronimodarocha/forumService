@@ -32,7 +32,7 @@ public class UsuarioService {
 		return usuarioSalvo;
 	}
 
-	public Usuario save(@Valid Usuario u) {
+	public Usuario save(Usuario u) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String passwordEndocer = encoder.encode(u.getPassword());
 		u.setPassword(passwordEndocer);

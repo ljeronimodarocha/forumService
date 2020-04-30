@@ -17,13 +17,16 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
+
 	@NotBlank
 	private String name;
+
 	@NotBlank
 	@Email
 	private String email;
+	
 	@NotBlank
-	@JsonIgnore
+	//@JsonIgnore
 	private String password;
 
 	@Enumerated(EnumType.STRING)
