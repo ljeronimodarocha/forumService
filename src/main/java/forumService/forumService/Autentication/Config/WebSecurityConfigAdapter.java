@@ -8,12 +8,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import forumService.forumService.Autentication.Config.dto.UsuarioCustomDTO;
 import forumService.forumService.Models.Usuario;
 import forumService.forumService.Repository.UsuarioRepository;
-
 
 @Configuration
 @EnableWebSecurity
