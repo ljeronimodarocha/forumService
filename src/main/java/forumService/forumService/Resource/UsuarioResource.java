@@ -25,7 +25,7 @@ import forumService.forumService.Models.Usuario;
 import forumService.forumService.Repository.UsuarioRepository;
 import forumService.forumService.Service.UsuarioService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioResource {
