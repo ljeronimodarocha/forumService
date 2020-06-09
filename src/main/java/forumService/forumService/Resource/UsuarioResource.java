@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +25,7 @@ import forumService.forumService.Models.Usuario;
 import forumService.forumService.Repository.UsuarioRepository;
 import forumService.forumService.Service.UsuarioService;
 
-@CrossOrigin
+@PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioResource {

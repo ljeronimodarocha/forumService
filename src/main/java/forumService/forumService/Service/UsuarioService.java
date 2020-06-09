@@ -20,7 +20,6 @@ public class UsuarioService {
 	public Usuario Atualizar(Long codigo, @Valid Usuario usuario) {
 		Usuario usuarioNovo = buscarUsuarioPeloCodigo(codigo);
 		BeanUtils.copyProperties(usuario, usuarioNovo, "codigo");
-		System.out.println(usuarioNovo.getEstado());
 		return usuarioRepository.save(usuarioNovo);
 	}
 
@@ -38,5 +37,6 @@ public class UsuarioService {
 		u.setPassword(passwordEndocer);
 		return usuarioRepository.save(u);
 	}
+	
 
 }

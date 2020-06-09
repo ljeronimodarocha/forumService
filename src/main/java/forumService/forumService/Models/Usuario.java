@@ -65,6 +65,8 @@ public class Usuario {
 		return estado;
 	}
 
+	private boolean admin;
+
 	@Override
 	public String toString() {
 		return "Usuario [codigo=" + codigo + ", email=" + email + ", estado=" + estado + ", name=" + name
@@ -82,5 +84,14 @@ public class Usuario {
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+	
 
 }

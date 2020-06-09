@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ import forumService.forumService.Service.PostService;
  */
 @RestController
 @RequestMapping("/posts")
+@PreAuthorize("hasRole('USER')")
 public class PostResource {
 
     @Autowired
@@ -58,7 +60,6 @@ public class PostResource {
         Post postSalvo = postService.fechaPost(codigo);
         return ResponseEntity.ok(postSalvo);
     }
-
     @PostMapping
     public ResponseEntity<Post> criar(@Valid @RequestBody Post post, HttpServletResponse response) {
         Post postSalvo = postService.adicionar(post);
