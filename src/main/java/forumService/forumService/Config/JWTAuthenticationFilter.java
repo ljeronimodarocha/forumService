@@ -8,12 +8,14 @@ import static forumService.forumService.Config.SecurityConstants.TOKEN_PREFIX;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.management.RuntimeErrorException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,25 +32,27 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
-    public JWTAuthenticationFilter(final AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
     @Override
-    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
         try {
-            final Usuario user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
-            return this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),
-                    user.getPassword()));
-        } catch (final IOException e) {
+            Usuario user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
+            return this.authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
-    protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain,
-            final Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authResult) throws IOException, ServletException {
         final String email = ((User) authResult.getPrincipal()).getUsername();
         final String token = Jwts.builder().setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

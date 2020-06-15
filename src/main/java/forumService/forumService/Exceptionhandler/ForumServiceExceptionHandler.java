@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -56,7 +59,7 @@ public class ForumServiceExceptionHandler extends ResponseEntityExceptionHandler
 		return super.handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
 
-	@ExceptionHandler({ IllegalArgumentException.class })
+	@ExceptionHandler({ IllegalArgumentException.class, MismatchedInputException.class })
 	public ResponseEntity<Object> handleIllegalArgumentException(EntityNotFoundException ex, WebRequest request) {
 		final String mensagemUsuário = messageSource.getMessage("recurso.não-encontrado", null,
 				LocaleContextHolder.getLocale());
@@ -72,6 +75,14 @@ public class ForumServiceExceptionHandler extends ResponseEntityExceptionHandler
 		final String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuário, mensagemDesenvolvedor));
 		return super.handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	@ExceptionHandler({AccessDeniedException.class})
+	public ResponseEntity<Object> handleEntityAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+		final String mensagemUsuário = messageSource.getMessage("recurso.não-autorizado", null,
+				LocaleContextHolder.getLocale());
+		final String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuário, mensagemDesenvolvedor));
+		return super.handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
 	}
 
 	private List<Erro> criaListaDeErros(final BindingResult bindingResult) {

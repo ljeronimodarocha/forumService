@@ -39,16 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailService).passwordEncoder(new BCryptPasswordEncoder());
     }
-
-    /*
-     * @Autowired public void configureGlobal(AuthenticationManagerBuilder auth)
-     * throws Exception { BCryptPasswordEncoder encoder = new
-     * BCryptPasswordEncoder();
-     * auth.inMemoryAuthentication().withUser("lucas").password(encoder.encode("123"
-     * )).roles("USER").and()
-     * .withUser("admin").password(encoder.encode("123")).roles("USER", "ADMIN"); }
-     */
-
+    
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -60,5 +51,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+    /*
+     * @Autowired public void configureGlobal(AuthenticationManagerBuilder auth)
+     * throws Exception { BCryptPasswordEncoder encoder = new
+     * BCryptPasswordEncoder();
+     * auth.inMemoryAuthentication().withUser("lucas").password(encoder.encode("123"
+     * )).roles("USER").and()
+     * .withUser("admin").password(encoder.encode("123")).roles("USER", "ADMIN"); }
+     */
+
 
 }
