@@ -31,6 +31,9 @@ public class Post {
     @NotBlank
     private String titulo;
 
+    @NotBlank
+    private String texto;
+
     @OneToOne(fetch = FetchType.EAGER)
     private Usuario dono;
 
@@ -90,6 +93,14 @@ public class Post {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getTexto() {
+        return texto;
+    }
+
+    public void setTexto(String texto) {
+        this.texto = texto;
     }
 
 }
