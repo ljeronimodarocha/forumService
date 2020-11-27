@@ -25,12 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
-   
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-      
+
         http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .antMatchers(HttpMethod.POST, "usuarios").permitAll().and()
+                .antMatchers(HttpMethod.POST, "/usuarios").permitAll().and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), customUserDetailService));
     }
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailService).passwordEncoder(new BCryptPasswordEncoder());
     }
-    
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -59,6 +59,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * )).roles("USER").and()
      * .withUser("admin").password(encoder.encode("123")).roles("USER", "ADMIN"); }
      */
-
 
 }

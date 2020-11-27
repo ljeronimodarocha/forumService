@@ -38,6 +38,7 @@ public class UsuarioResource {
 	@Autowired
 	private UsuarioService usuarioService;
 
+	@PreAuthorize("permitAll()")
 	@PostMapping
 	public ResponseEntity<Usuario> criar(@Valid @RequestBody Usuario u, HttpServletResponse response) {
 		Usuario userSave = usuarioService.save(u);

@@ -8,14 +8,12 @@ import static forumService.forumService.Config.SecurityConstants.TOKEN_PREFIX;
 import java.io.IOException;
 import java.util.Date;
 
-import javax.management.RuntimeErrorException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
